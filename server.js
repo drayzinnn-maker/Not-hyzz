@@ -1,32 +1,22 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// ===== CONFIGURAÇÃO DO SUPABASE (já com suas credenciais) =====
+const SUPABASE_URL = 'https://rxvrlujyqtvxggeyflgs.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4dnJsdWp5cXR2eGdnZXlmbGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyOTgzMjEsImV4cCI6MjEwMTg3NDMyMX0.Fdatn8OnlcZVlGRKfcJo4EzyfAkq_JKvSIJQjOUi6c4';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'frontend')));
 
-const db = new sqlite3.Database('./database.sqlite');
-
-db.run(`
-  CREATE TABLE IF NOT EXISTS sales (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    transaction_id TEXT UNIQUE,
-    product_name TEXT,
-    buyer_email TEXT,
-    buyer_name TEXT,
-    value REAL,
-    status TEXT,
-    purchase_date TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`);
-
-app.post('/webhook', (req, res) => {
+// ===== ROTA WEBHOOK =====
+app.post('/webhook', async (req, res) => {
   const data = req.body;
   const event = data.event;
   const product = data.data?.product || {};
@@ -43,32 +33,70 @@ app.post('/webhook', (req, res) => {
   const buyerEmail = buyer.email || 'email@naoinformado.com';
   const buyerName = buyer.name || 'Cliente não informado';
   const value = purchase.full_price?.value || 0;
+  const currency = purchase.full_price?.currency || 'BRL';
   const purchaseDate = purchase.approved_date ? new Date(purchase.approved_date).toISOString() : new Date().toISOString();
 
-  const sql = `
-    INSERT OR REPLACE INTO sales 
-    (transaction_id, product_name, buyer_email, buyer_name, value, status, purchase_date)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `;
-  db.run(sql, [transactionId, productName, buyerEmail, buyerName, value, 'approved', purchaseDate], function(err) {
-    if (err) {
-      console.error('❌ Erro:', err.message);
-      return res.status(500).json({ error: 'Erro' });
-    }
-    console.log(`✅ Venda: ${productName} - ${buyerEmail}`);
-    res.status(200).json({ message: 'OK' });
-  });
+  const { error } = await supabase
+    .from('sales')
+    .upsert({
+      transaction_id: transactionId,
+      product_name: productName,
+      buyer_email: buyerEmail,
+      buyer_name: buyerName,
+      value: value,
+      currency: currency,
+      status: 'approved',
+      purchase_date: purchaseDate
+    }, { onConflict: 'transaction_id' });
+
+  if (error) {
+    console.error('❌ Erro ao salvar no Supabase:', error.message);
+    return res.status(500).json({ error: 'Erro ao processar' });
+  }
+
+  console.log(`✅ Venda: ${productName} - ${buyerEmail}`);
+  res.status(200).json({ message: 'OK' });
 });
 
-app.get('/api/sales', (req, res) => {
-  db.all('SELECT * FROM sales ORDER BY purchase_date DESC', (err, rows) => {
-    if (err) return res.status(500).json({ error: 'Erro' });
-    res.json(rows);
-  });
+// ===== API LISTAR VENDAS =====
+app.get('/api/sales', async (req, res) => {
+  const { data, error } = await supabase
+    .from('sales')
+    .select('*')
+    .order('purchase_date', { ascending: false });
+
+  if (error) {
+    console.error('❌ Erro ao buscar vendas:', error.message);
+    return res.status(500).json({ error: 'Erro ao buscar' });
+  }
+
+  res.json(data);
 });
 
+// ===== API APAGAR TODAS AS VENDAS =====
+app.delete('/api/sales', async (req, res) => {
+  const { error } = await supabase.from('sales').delete().neq('id', 0);
+  if (error) {
+    console.error('❌ Erro ao apagar vendas:', error.message);
+    return res.status(500).json({ error: 'Erro ao apagar' });
+  }
+  res.json({ message: 'Todas as vendas foram apagadas.' });
+});
+
+// ===== API APAGAR UMA VENDA ESPECÍFICA =====
+app.delete('/api/sales/:id', async (req, res) => {
+  const id = req.params.id;
+  const { error } = await supabase.from('sales').delete().eq('id', id);
+  if (error) {
+    console.error('❌ Erro ao apagar venda:', error.message);
+    return res.status(500).json({ error: 'Erro ao apagar' });
+  }
+  res.json({ message: 'Venda apagada.' });
+});
+
+// ===== SERVE O FRONTEND =====
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend/index.html'));
 });
 
-app.listen(PORT, () => console.log(`🚀 Servidor em http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
