@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Funcionário - HYZZ FFZ</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: #0b0e14;
+      color: #e4e6eb;
+      height: 100vh;
+    }
+    .dashboard {
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background: #141a24;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #2a303c;
+      flex-shrink: 0;
+    }
+    .logo h2 {
+      font-size: 22px;
+      color: #f0b90b;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .logo span {
+      display: block;
+      font-size: 12px;
+      color: #8896a6;
+      margin-top: 4px;
+    }
+    nav {
+      margin-top: 40px;
+      flex: 1;
+    }
+    nav ul {
+      list-style: none;
+    }
+    nav ul li {
+      margin-bottom: 8px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    nav ul li a {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      color: #b0bcca;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    nav ul li a i {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+    nav ul li.active {
+      background: #2a3546;
+    }
+    nav ul li.active a {
+      color: #fff;
+    }
+    nav ul li:hover:not(.active) {
+      background: #1e2633;
+    }
+    .main-content {
+      flex: 1;
+      padding: 24px 32px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    header .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    header .header-left i {
+      font-size: 28px;
+      color: #f0b90b;
+    }
+    header h1 {
+      font-size: 26px;
+      font-weight: 600;
+    }
+    header .header-left span {
+      display: block;
+      font-size: 14px;
+      color: #8896a6;
+      margin-top: 4px;
+      margin-left: 4px;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    #refreshBtn {
+      background: #2a3546;
+      border: none;
+      color: #e4e6eb;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+    #refreshBtn:hover {
+      background: #3a4556;
+    }
+    .filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .filters input {
+      flex: 1;
+      min-width: 220px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid #2a303c;
+      background: #141a24;
+      color: #e4e6eb;
+      font-size: 14px;
+      outline: none;
+    }
+    .filters input::placeholder {
+      color: #6b7a8a;
+    }
+    .filters button {
+      padding: 10px 24px;
+      border-radius: 8px;
+      border: none;
+      background: #f0b90b;
+      color: #141a24;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filters button:hover {
+      background: #d4a30a;
+    }
+    .sales-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .sale-card {
+      background: #141a24;
+      border: 1px solid #2a303c;
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.2s, background 0.2s;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .sale-card:hover {
+      border-color: #3a4556;
+      background: #1a212e;
+    }
+    .sale-card .info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 2;
+      min-width: 180px;
+    }
+    .sale-card .info .product {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .sale-card .info .buyer {
+      font-size: 14px;
+      color: #b0bcca;
+    }
+    .sale-card .info .buyer i {
+      margin-right: 6px;
+      width: 16px;
+      color: #8896a6;
+    }
+    .sale-card .details {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .sale-card .details .value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f0b90b;
+    }
+    .sale-card .details .date {
+      font-size: 13px;
+      color: #6b7a8a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sale-card .details .date i {
+      font-size: 14px;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #6b7a8a;
+      font-size: 18px;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 70px;
+        padding: 16px 8px;
+      }
+      .logo h2,
+      .logo span,
+      nav ul li a span {
+        display: none;
+      }
+      nav ul li a {
+        justify-content: center;
+        padding: 12px;
+      }
+      nav ul li a i {
+        font-size: 22px;
+        margin: 0;
+      }
+      .main-content {
+        padding: 16px;
+      }
+      .sale-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .sale-card .details {
+        justify-content: space-between;
+        margin-top: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>HYZZ FFZ</h2>
+        <span>Painel Funcionário</span>
+      </div>
+      <nav>
+        <ul>
+          <li class="active"><a href="#"><i class="fas fa-shopping-cart"></i> <span>Vendas</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <div class="container">
+        <header>
+          <div class="header-left">
+            <i class="fas fa-bell"></i>
+            <div>
+              <h1>Not. Vendas</h1>
+              <span id="currentTime"></span>
+            </div>
+          </div>
+          <div class="header-right">
+            <button id="refreshBtn"><i class="fas fa-sync-alt"></i> Atualizar</button>
+          </div>
+        </header>
+        <section class="filters">
+          <input type="text" id="searchInput" placeholder="Buscar por e-mail do comprador...">
+          <button id="filterBtn"><i class="fas fa-search"></i> Buscar</button>
+        </section>
+        <section class="sales-grid" id="salesGrid">
+          <div class="loading">Carregando vendas...</div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>
+    const API_URL = '/api/sales';
+    const salesGrid = document.getElementById('salesGrid');
+    const searchInput = document.getElementById('searchInput');
+    const filterBtn = document.getElementById('filterBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const currentTimeSpan = document.getElementById('currentTime');
+    let salesData = [];
+
+    function formatDate(dateString) {
+      const d = new Date(dateString);
+      return d.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    }
+
+    function updateClock() {
+      const now = new Date();
+      currentTimeSpan.textContent = now.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function renderSales(sales) {
+      if (!sales || sales.length === 0) {
+        salesGrid.innerHTML = `<div class="loading">Nenhuma venda encontrada</div>`;
+        return;
+      }
+      let html = '';
+      sales.forEach(sale => {
+        const valueFormatted = new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        }).format(sale.value);
+        html += `
+          <div class="sale-card">
+            <div class="info">
+              <div class="product">${sale.product_name}</div>
+              <div class="buyer">
+                <i class="fas fa-user"></i> ${sale.buyer_name}
+                <i class="fas fa-envelope" style="margin-left:12px;"></i> ${sale.buyer_email}
+              </div>
+            </div>
+            <div class="details">
+              <div class="value">${valueFormatted}</div>
+              <div class="date"><i class="far fa-calendar-alt"></i> ${formatDate(sale.purchase_date)}</div>
+            </div>
+          </div>
+        `;
+      });
+      salesGrid.innerHTML = html;
+    }
+
+    function applyFilters() {
+      const term = searchInput.value.toLowerCase().trim();
+      let filtered = salesData;
+      if (term) {
+        filtered = filtered.filter(s =>
+          s.buyer_email.toLowerCase().includes(term) ||
+          s.buyer_name.toLowerCase().includes(term)
+        );
+      }
+      renderSales(filtered);
+    }
+
+    async function loadSales() {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Erro');
+        const data = await response.json();
+        salesData = data;
+        applyFilters();
+      } catch (error) {
+        salesGrid.innerHTML = `<div class="loading">Erro ao carregar vendas</div>`;
+      }
+    }
+
+    refreshBtn.addEventListener('click', loadSales);
+    filterBtn.addEventListener('click', loadSales);
+    searchInput.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') loadSales();
+    });
+
+    loadSales();
+    setInterval(loadSales, 10000);
+  </script>
+</body>
+</html>
