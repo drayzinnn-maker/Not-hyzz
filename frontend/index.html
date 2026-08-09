@@ -2,306 +2,101 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel Funcionário - HYZZ FFZ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>HYZZ FFZ - Painel Vendas</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" href="favicon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="HYZZ Vendas" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#f0b90b" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      background: #0b0e14;
-      color: #e4e6eb;
-      height: 100vh;
-    }
-    .dashboard {
-      display: flex;
-      height: 100vh;
-    }
-    .sidebar {
-      width: 220px;
-      background: #141a24;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid #2a303c;
-      flex-shrink: 0;
-    }
-    .logo h2 {
-      font-size: 22px;
-      color: #f0b90b;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-    .logo span {
-      display: block;
-      font-size: 12px;
-      color: #8896a6;
-      margin-top: 4px;
-    }
-    nav {
-      margin-top: 40px;
-      flex: 1;
-    }
-    nav ul {
-      list-style: none;
-    }
-    nav ul li {
-      margin-bottom: 8px;
-      border-radius: 8px;
-      transition: background 0.2s;
-    }
-    nav ul li a {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 16px;
-      color: #b0bcca;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 15px;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-    nav ul li a i {
-      font-size: 18px;
-      width: 24px;
-      text-align: center;
-    }
-    nav ul li.active {
-      background: #2a3546;
-    }
-    nav ul li.active a {
-      color: #fff;
-    }
-    nav ul li:hover:not(.active) {
-      background: #1e2633;
-    }
-    .main-content {
-      flex: 1;
-      padding: 24px 32px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .container {
-      max-width: 900px;
-      width: 100%;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-    header .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    header .header-left i {
-      font-size: 28px;
-      color: #f0b90b;
-    }
-    header h1 {
-      font-size: 26px;
-      font-weight: 600;
-    }
-    header .header-left span {
-      display: block;
-      font-size: 14px;
-      color: #8896a6;
-      margin-top: 4px;
-      margin-left: 4px;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    #refreshBtn {
-      background: #2a3546;
-      border: none;
-      color: #e4e6eb;
-      padding: 6px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: 0.2s;
-    }
-    #refreshBtn:hover {
-      background: #3a4556;
-    }
-    .filters {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-    .filters input {
-      flex: 1;
-      min-width: 220px;
-      padding: 10px 16px;
-      border-radius: 8px;
-      border: 1px solid #2a303c;
-      background: #141a24;
-      color: #e4e6eb;
-      font-size: 14px;
-      outline: none;
-    }
-    .filters input::placeholder {
-      color: #6b7a8a;
-    }
-    .filters button {
-      padding: 10px 24px;
-      border-radius: 8px;
-      border: none;
-      background: #f0b90b;
-      color: #141a24;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .filters button:hover {
-      background: #d4a30a;
-    }
-    .sales-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-    .sale-card {
-      background: #141a24;
-      border: 1px solid #2a303c;
-      border-radius: 10px;
-      padding: 14px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: border-color 0.2s, background 0.2s;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .sale-card:hover {
-      border-color: #3a4556;
-      background: #1a212e;
-    }
-    .sale-card .info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 2;
-      min-width: 180px;
-    }
-    .sale-card .info .product {
-      font-size: 16px;
-      font-weight: 600;
-      color: #fff;
-    }
-    .sale-card .info .buyer {
-      font-size: 14px;
-      color: #b0bcca;
-    }
-    .sale-card .info .buyer i {
-      margin-right: 6px;
-      width: 16px;
-      color: #8896a6;
-    }
-    .sale-card .details {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-    .sale-card .details .value {
-      font-size: 18px;
-      font-weight: 700;
-      color: #f0b90b;
-    }
-    .sale-card .details .date {
-      font-size: 13px;
-      color: #6b7a8a;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .sale-card .details .date i {
-      font-size: 14px;
-    }
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: #6b7a8a;
-      font-size: 18px;
-    }
+    /* ===== RESET & BASE ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: #0b0e14; color: #e4e6eb; height: 100vh; overflow: hidden; }
+    .dashboard { display: flex; height: 100vh; }
+    .sidebar { width: 220px; background: #141a24; padding: 20px 16px; display: flex; flex-direction: column; border-right: 1px solid #2a303c; flex-shrink: 0; }
+    .logo h2 { font-size: 22px; color: #f0b90b; font-weight: 700; letter-spacing: 1px; }
+    .logo span { display: block; font-size: 12px; color: #8896a6; margin-top: 4px; }
+    nav { margin-top: 40px; flex: 1; }
+    nav ul { list-style: none; }
+    nav ul li { margin-bottom: 8px; border-radius: 8px; transition: background 0.2s; }
+    nav ul li a { display: flex; align-items: center; gap: 14px; padding: 12px 16px; color: #b0bcca; text-decoration: none; font-weight: 500; font-size: 15px; border-radius: 8px; transition: all 0.2s; }
+    nav ul li a i { font-size: 18px; width: 24px; text-align: center; }
+    nav ul li.active { background: #2a3546; }
+    nav ul li.active a { color: #fff; }
+    nav ul li:hover:not(.active) { background: #1e2633; }
+    .main-content { flex: 1; padding: 24px 32px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; height: 100vh; }
+    .container { max-width: 900px; width: 100%; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; }
+    header .header-left { display: flex; align-items: center; gap: 12px; }
+    header .header-left i { font-size: 28px; color: #f0b90b; }
+    header h1 { font-size: 26px; font-weight: 600; }
+    header .header-left span { display: block; font-size: 14px; color: #8896a6; margin-top: 4px; margin-left: 4px; }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .header-right button { background: #2a3546; border: none; color: #e4e6eb; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+    .header-right button:hover { background: #3a4556; }
+    .filters { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+    .filters input { flex: 1; min-width: 220px; padding: 10px 16px; border-radius: 8px; border: 1px solid #2a303c; background: #141a24; color: #e4e6eb; font-size: 14px; outline: none; }
+    .filters input::placeholder { color: #6b7a8a; }
+    .filters button { padding: 10px 24px; border-radius: 8px; border: none; background: #f0b90b; color: #141a24; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+    .filters button:hover { background: #d4a30a; }
+    .sales-grid { display: grid; grid-template-columns: 1fr; gap: 12px; padding-bottom: 30px; }
+    .sale-card { background: #141a24; border: 1px solid #2a303c; border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s, background 0.2s; flex-wrap: wrap; gap: 8px; }
+    .sale-card:hover { border-color: #3a4556; background: #1a212e; }
+    .sale-card .info { display: flex; flex-direction: column; gap: 4px; flex: 2; min-width: 180px; }
+    .sale-card .info .product { font-size: 16px; font-weight: 600; color: #fff; }
+    .sale-card .info .buyer { font-size: 14px; color: #b0bcca; }
+    .sale-card .info .buyer i { margin-right: 6px; width: 16px; color: #8896a6; }
+    .sale-card .details { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .sale-card .details .value { font-size: 18px; font-weight: 700; color: #f0b90b; }
+    .sale-card .details .value .currency { font-size: 14px; color: #8896a6; font-weight: 400; margin-left: 4px; }
+    .sale-card .details .date { font-size: 13px; color: #6b7a8a; display: flex; align-items: center; gap: 6px; }
+    .sale-card .details .date i { font-size: 14px; }
+    .sale-card .delete-btn { background: #8a1f1f; border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    .sale-card .delete-btn:hover { background: #b33b3b; }
+    .loading { text-align: center; padding: 40px; color: #6b7a8a; font-size: 18px; }
+    .clear-btn { background: #8a1f1f !important; color: #fff !important; }
+    .clear-btn:hover { background: #b33b3b !important; }
+
+    /* TOAST */
+    #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; max-width: 380px; width: 100%; pointer-events: none; }
+    .toast { background: #1e2633; border-left: 6px solid #f0b90b; border-radius: 10px; padding: 16px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); display: flex; align-items: center; gap: 14px; animation: slideInRight 0.5s ease; pointer-events: auto; transition: opacity 0.3s; }
+    .toast i { font-size: 28px; color: #f0b90b; }
+    .toast .toast-content { flex: 1; }
+    .toast .toast-content strong { display: block; font-size: 16px; color: #fff; }
+    .toast .toast-content span { font-size: 14px; color: #b0bcca; }
+    .toast.hide { opacity: 0; transform: translateX(100%); }
+    @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
     @media (max-width: 768px) {
-      .sidebar {
-        width: 70px;
-        padding: 16px 8px;
-      }
-      .logo h2,
-      .logo span,
-      nav ul li a span {
-        display: none;
-      }
-      nav ul li a {
-        justify-content: center;
-        padding: 12px;
-      }
-      nav ul li a i {
-        font-size: 22px;
-        margin: 0;
-      }
-      .main-content {
-        padding: 16px;
-      }
-      .sale-card {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .sale-card .details {
-        justify-content: space-between;
-        margin-top: 6px;
-      }
+      .sidebar { width: 70px; padding: 16px 8px; }
+      .logo h2, .logo span, nav ul li a span { display: none; }
+      nav ul li a { justify-content: center; padding: 12px; }
+      nav ul li a i { font-size: 22px; margin: 0; }
+      .main-content { padding: 16px; }
+      .sale-card { flex-direction: column; align-items: stretch; }
+      .sale-card .details { justify-content: space-between; margin-top: 6px; }
+      #toast-container { top: 10px; right: 10px; max-width: calc(100% - 20px); }
     }
+    @media (display-mode: standalone) { .main-content { padding-top: 40px; } }
   </style>
 </head>
 <body>
   <div class="dashboard">
     <aside class="sidebar">
-      <div class="logo">
-        <h2>HYZZ FFZ</h2>
-        <span>Painel Funcionário</span>
-      </div>
-      <nav>
-        <ul>
-          <li class="active"><a href="#"><i class="fas fa-shopping-cart"></i> <span>Vendas</span></a></li>
-        </ul>
-      </nav>
+      <div class="logo"><h2>HYZZ FFZ</h2><span>Painel Funcionário</span></div>
+      <nav><ul><li class="active"><a href="#"><i class="fas fa-shopping-cart"></i> <span>Vendas</span></a></li></ul></nav>
     </aside>
     <main class="main-content">
       <div class="container">
         <header>
-          <div class="header-left">
-            <i class="fas fa-bell"></i>
-            <div>
-              <h1>Not. Vendas</h1>
-              <span id="currentTime"></span>
-            </div>
-          </div>
+          <div class="header-left"><i class="fas fa-bell"></i><div><h1>Not. Vendas</h1><span id="currentTime"></span></div></div>
           <div class="header-right">
+            <button id="clearAllBtn" class="clear-btn"><i class="fas fa-trash-alt"></i> Limpar vendas</button>
             <button id="refreshBtn"><i class="fas fa-sync-alt"></i> Atualizar</button>
           </div>
         </header>
@@ -309,46 +104,51 @@
           <input type="text" id="searchInput" placeholder="Buscar por e-mail do comprador...">
           <button id="filterBtn"><i class="fas fa-search"></i> Buscar</button>
         </section>
-        <section class="sales-grid" id="salesGrid">
-          <div class="loading">Carregando vendas...</div>
-        </section>
+        <section class="sales-grid" id="salesGrid"><div class="loading">Carregando vendas...</div></section>
       </div>
     </main>
   </div>
+  <div id="toast-container"></div>
+  <audio id="cashSound" preload="auto"><source src="https://www.myinstants.com/media/sounds/cash-register.mp3" type="audio/mpeg"></audio>
+
   <script>
     const API_URL = '/api/sales';
+    const REFRESH_INTERVAL = 10000;
+    let previousSales = [];
+    let isFirstLoad = true;
+
     const salesGrid = document.getElementById('salesGrid');
     const searchInput = document.getElementById('searchInput');
     const filterBtn = document.getElementById('filterBtn');
     const refreshBtn = document.getElementById('refreshBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
     const currentTimeSpan = document.getElementById('currentTime');
-    let salesData = [];
+    const toastContainer = document.getElementById('toast-container');
+    const cashSound = document.getElementById('cashSound');
 
     function formatDate(dateString) {
       const d = new Date(dateString);
-      return d.toLocaleString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      });
+      return d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
     }
 
     function updateClock() {
       const now = new Date();
-      currentTimeSpan.textContent = now.toLocaleString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      });
+      currentTimeSpan.textContent = now.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    function showToast(productName) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<i class="fas fa-check-circle"></i><div class="toast-content"><strong>Venda realizada ✅</strong><span>${productName}</span></div>`;
+      toastContainer.appendChild(toast);
+      try { cashSound.currentTime = 0; cashSound.play().catch(() => {}); } catch (e) {}
+      if (Notification.permission === 'granted') {
+        new Notification('Venda realizada ✅', { body: `Produto: ${productName}`, icon: 'favicon.png' });
+      }
+      setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 300); }, 5000);
+    }
 
     function renderSales(sales) {
       if (!sales || sales.length === 0) {
@@ -357,61 +157,101 @@
       }
       let html = '';
       sales.forEach(sale => {
-        const valueFormatted = new Intl.NumberFormat('pt-BR', {
-          style: 'currency',
-          currency: 'BRL'
-        }).format(sale.value);
+        const valueFormatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: sale.currency || 'BRL' }).format(sale.value);
+        const currencyTag = (sale.currency || 'BRL') === 'USD' ? ' <span class="currency">(USD)</span>' : '';
         html += `
-          <div class="sale-card">
+          <div class="sale-card" data-id="${sale.id}">
             <div class="info">
               <div class="product">${sale.product_name}</div>
-              <div class="buyer">
-                <i class="fas fa-user"></i> ${sale.buyer_name}
-                <i class="fas fa-envelope" style="margin-left:12px;"></i> ${sale.buyer_email}
-              </div>
+              <div class="buyer"><i class="fas fa-user"></i> ${sale.buyer_name} <i class="fas fa-envelope" style="margin-left:12px;"></i> ${sale.buyer_email}</div>
             </div>
             <div class="details">
-              <div class="value">${valueFormatted}</div>
+              <div class="value">${valueFormatted}${currencyTag}</div>
               <div class="date"><i class="far fa-calendar-alt"></i> ${formatDate(sale.purchase_date)}</div>
+              <button class="delete-btn" data-id="${sale.id}" title="Apagar esta venda"><i class="fas fa-times"></i></button>
             </div>
           </div>
         `;
       });
       salesGrid.innerHTML = html;
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          if (confirm('Apagar esta venda permanentemente?')) {
+            await deleteSale(id);
+            loadSales();
+          }
+        });
+      });
     }
 
-    function applyFilters() {
+    async function deleteSale(id) {
+      try {
+        const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error('Erro ao apagar');
+      } catch (error) {
+        console.error('Erro ao apagar venda:', error);
+      }
+    }
+
+    function applyFilters(salesData) {
       const term = searchInput.value.toLowerCase().trim();
       let filtered = salesData;
       if (term) {
-        filtered = filtered.filter(s =>
-          s.buyer_email.toLowerCase().includes(term) ||
-          s.buyer_name.toLowerCase().includes(term)
-        );
+        filtered = filtered.filter(s => s.buyer_email.toLowerCase().includes(term) || s.buyer_name.toLowerCase().includes(term));
       }
       renderSales(filtered);
+    }
+
+    function detectNewSales(newSales) {
+      if (isFirstLoad) { previousSales = newSales; isFirstLoad = false; return; }
+      const prevIds = new Set(previousSales.map(s => s.transaction_id || s.id));
+      const newOnes = newSales.filter(s => !prevIds.has(s.transaction_id || s.id));
+      if (newOnes.length > 0) {
+        newOnes.forEach(sale => showToast(sale.product_name));
+      }
+      previousSales = newSales;
     }
 
     async function loadSales() {
       try {
         const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Erro');
-        const data = await response.json();
-        salesData = data;
-        applyFilters();
+        if (!response.ok) throw new Error('Erro ao buscar');
+        const sales = await response.json();
+        detectNewSales(sales);
+        applyFilters(sales);
       } catch (error) {
-        salesGrid.innerHTML = `<div class="loading">Erro ao carregar vendas</div>`;
+        salesGrid.innerHTML = `<div class="loading">Erro ao carregar vendas. Tente novamente.</div>`;
+        console.error('Erro:', error);
       }
     }
 
-    refreshBtn.addEventListener('click', loadSales);
-    filterBtn.addEventListener('click', loadSales);
-    searchInput.addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') loadSales();
+    clearAllBtn.addEventListener('click', async () => {
+      if (confirm('⚠️ Tem certeza que deseja apagar TODAS as vendas? Essa ação não pode ser desfeita.')) {
+        try {
+          const response = await fetch(API_URL, { method: 'DELETE' });
+          if (response.ok) {
+            alert('Todas as vendas foram apagadas.');
+            loadSales();
+          } else {
+            alert('Erro ao apagar vendas.');
+          }
+        } catch (error) {
+          alert('Erro de conexão.');
+        }
+      }
     });
 
+    refreshBtn.addEventListener('click', loadSales);
+    filterBtn.addEventListener('click', () => { applyFilters(previousSales); });
+    searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') applyFilters(previousSales); });
+
+    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+
     loadSales();
-    setInterval(loadSales, 10000);
+    setInterval(loadSales, REFRESH_INTERVAL);
   </script>
 </body>
 </html>
